@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Warung Bang JaJa</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,700;1,700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Father Icons -->
+    <script src="https://unpkg.com/feather-icons"></script>
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+
+    <!-- Icon Logo Jaja -->
+    <link rel="icon" href="img/jaja-logo.png" />
+
+    <!-- AOS -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+    <!-- My Style -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+
+  <body>
+    <!-- Navbar Start -->
+    <nav class="navbar">
+      <a href="#" class="navbar-logo"
+        >Warung<span>BangJaJa </span><span><i class="bi bi-shop"></i></span>
+      </a>
+
+      <div class="navbar-nav">
+        <a href="#home">Home</a>
+        <a href="#about">Tentang Kami</a>
+        <a href="#menu">Menu</a>
+        <a href="#product">Penawaran Spesial</a>
+        <a href="#contact">Kontak Kami</a>
+      </div>
+
+      <div class="navbar-extra">
+        <a href="#" id="search-button"><i data-feather="search"></i></a>
+        <a href="#" id="shopping-cart-button"
+          ><i data-feather="shopping-cart"></i
+        ></a>
+        <a href="#" id="hamburger-menu"><i data-feather="menu"></i></a>
+      </div>
+
+      <!-- Search Form Start -->
+      <div class="search-form">
+        <input type="search" id="search-box" placeholder="Mau Cari Apa ?" />
+        <label for="search-box"><i data-feather="search"></i></label>
+      </div>
+      <!-- Search Form End -->
+
+      <!-- Shopping Cart Start -->
+      <div class="shopping-cart">
+        <div class="title-shopping-cart">
+          <h2>Pesanan Anda</h2>
+        </div>
+      </div>
+      <!-- Shopping Cart End -->
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Hero Section start -->
+    <section class="hero" id="home">
+      <main class="content">
+        <h1>Mari Belanja di <span>WarungBangJaJa</span></h1>
+        <p>WarungBangJaJa lengkap menjual segala kebutuhan pokok</p>
+        <a href="#menu" class="cta">Belanja Sekarang</a>
+      </main>
+    </section>
+    <!-- Hero Section end -->
+
+    <!-- About Section Start -->
+    <section
+      id="about"
+      class="about"
+      data-aos="fade-down"
+      data-aos-duration="1000"
+    >
+      <h2><span>Tentang</span> Kami</h2>
+
+      <div class="row">
+        <div class="about-img">
+          <img src="img/tentang-kami.jpg" alt="Tentang Kami" />
+        </div>
+        <div class="content">
+          <h3>Kenapa Anda Harus Memilih Toko Kami?</h3>
+          <p>
+            Toko kami, solusi lengkap untuk kebutuhan anda. Segala kebutuhan
+            anda ada di toko kami. Toko kami merupakan tempat terpercaya untuk
+            memenuhi kebutuhan sehari-hari anda.
+          </p>
+          <p>
+            Barang-barang yang dijual di toko kami berkualitas tinggi dengan
+            harga terjangkau. Toko kami hadir untuk memenuhi kebutuhan Anda
+            dengan pilihan yang lengkap. Temukan kebutuhan anda terbaik dan
+            terlengkap hanya di toko kami.
+          </p>
+        </div>
+      </div>
+    </section>
+    <!-- About Section end -->
+
+    <!-- Menu Section Start -->
+    <section
+      id="menu"
+      class="menu"
+      data-aos="fade-down"
+      data-aos-duration="1000"
+    >
+      <h2><span>Menu</span> Kami</h2>
+      <p>Berikut produk Yang Toko Kami Jual :</p>
+      <p>(Silakan Anda Melihat terlebih Dahulu Dan Dipilih Terlebih Dahulu)</p>
+
+      <div class="row">
+        <div class="menu-card">
+          <img src="img/menu/beras.jpg" alt="beras" class="menu-card-img" />
+          <h3 class="menu-card-title">~ Beras ~</h3>
+          <h5 class="menu-card-price">Harga : Rp 12.000/liter</h5>
+          <a href="#" class="menu-card-belanja">Belanja</a>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/minyak.jpg" alt="minyak" class="menu-card-img" />
+          <h3 class="menu-card-title">~ Minyak ~</h3>
+          <h5 class="menu-card-price">Harga : Rp 20.000/liter</h5>
+          <a href="#" class="menu-card-belanja">Belanja</a>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/gula.jpg" alt="gula" class="menu-card-img" />
+          <h3 class="menu-card-title">~ Gula ~</h3>
+          <h5 class="menu-card-price">Harga : Rp 10.000/Kg</h5>
+          <a href="#" class="menu-card-belanja">Belanja</a>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/susu.jpg" alt="susu" class="menu-card-img" />
+          <h3 class="menu-card-title">~ Susu ~</h3>
+          <h5 class="menu-card-price">Harga : Rp 13.000/370gram</h5>
+          <a href="#" class="menu-card-belanja">Belanja</a>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/telur.jpg" alt="telur" class="menu-card-img" />
+          <h3 class="menu-card-title">~ Telur ~</h3>
+          <h5 class="menu-card-price">Harga : Rp 29.000/Kg</h5>
+          <a href="#" class="menu-card-belanja">Belanja</a>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/garam.jpg" alt="garam" class="menu-card-img" />
+          <h3 class="menu-card-title">~ Garam ~</h3>
+          <h5 class="menu-card-price">Harga : Rp 3.000/250gram</h5>
+          <a href="#" class="menu-card-belanja">Belanja</a>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/gas.jpeg" alt="gas" class="menu-card-img" />
+          <h3 class="menu-card-title">~ Gas Elpiji ~</h3>
+          <h5 class="menu-card-price">Harga : Rp 19.000/3Kg</h5>
+          <a href="#" class="menu-card-belanja">Belanja</a>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/aqua.jpg" alt="air" class="menu-card-img" />
+          <h3 class="menu-card-title">~ Kopi Bubuk ~</h3>
+          <h5 class="menu-card-price">Harga : Rp 4.000/botol</h5>
+          <a href="#" class="menu-card-belanja">Belanja</a>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/kopi.png" alt="kopi" class="menu-card-img" />
+          <h3 class="menu-card-title">~ Kopi Bubuk ~</h3>
+          <h5 class="menu-card-price">Harga : Rp 50.000/Kg</h5>
+          <a href="#" class="menu-card-belanja">Belanja</a>
+        </div>
+        <div class="menu-card">
+          <img src="img/menu/teh.jpg" alt="teh" class="menu-card-img" />
+          <h3 class="menu-card-title">~ Teh Celup ~</h3>
+          <h5 class="menu-card-price">Harga : Rp 6.000/pack</h5>
+          <a href="#" class="menu-card-belanja">Belanja</a>
+        </div>
+      </div>
+    </section>
+    <!-- Menu Section end -->
+
+    <!-- Penawaran Section Start -->
+    <section
+      class="product"
+      id="product"
+      data-aos="fade-right"
+      data-aos-duration="1000"
+    >
+      <h2><span>Penawaran</span> Spesial</h2>
+      <p>Berikut Penawaran Spesial Untuk Anda Di Toko Kami :</p>
+      <p>(Silakan Anda Melihat terlebih Dahulu Dan Dipilih Terlebih Dahulu)</p>
+
+      <div class="row">
+        <div class="product-card">
+          <div class="product-icons">
+            <a href="#"><i data-feather="shopping-cart"></i></a>
+            <a href="#" class="item-detail-button-1"
+              ><i data-feather="eye"></i
+            ></a>
+          </div>
+          <div class="product-image">
+            <img src="img/product/mild16.png" alt="product 1" />
+          </div>
+          <div class="product-content">
+            <h3>Rokok Sampoerna Mild 16</h3>
+            <div class="product-star">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <div class="product-price">
+              Harga : Rp 25.000/Bungkus <span>Rp 30.000/Bungkus</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-icons">
+            <a href="#"><i data-feather="shopping-cart"></i></a>
+            <a href="#" class="item-detail-button-2"
+              ><i data-feather="eye"></i
+            ></a>
+          </div>
+          <div class="product-image">
+            <img src="img/product/gudanggaram.png" alt="product 2" />
+          </div>
+          <div class="product-content">
+            <h3>Rokok Gudang Garam Filter</h3>
+            <div class="product-star">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <div class="product-price">
+              Harga : Rp 24.500/Bungkus <span>Rp 28.000/Bungkus</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-icons">
+            <a href="#"><i data-feather="shopping-cart"></i></a>
+            <a href="#" class="item-detail-button-3"
+              ><i data-feather="eye"></i
+            ></a>
+          </div>
+          <div class="product-image">
+            <img src="img/product/super.jpg" alt="product 3" />
+          </div>
+          <div class="product-content">
+            <h3>Rokok Djarum Super</h3>
+            <div class="product-star">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <div class="product-price">
+              Harga : Rp 24.000/Bungkus <span>Rp 29.000/Bungkus</span>
+            </div>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-icons">
+            <a href="#"><i data-feather="shopping-cart"></i></a>
+            <a href="#" class="item-detail-button-4"
+              ><i data-feather="eye"></i
+            ></a>
+          </div>
+          <div class="product-image">
+            <img src="img/product/djisamsoe.jpg" alt="product 4" />
+          </div>
+          <div class="product-content">
+            <h3>Rokok Dji Sam Soe</h3>
+            <div class="product-star">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <div class="product-price">
+              Harga : Rp 20.000/Bungkus <span>Rp 24.000/Bungkus</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Penawaran Section End -->
+
+    <!-- Contact Section Start -->
+    <section
+      id="contact"
+      class="contact"
+      data-aos="fade-left"
+      data-aos-duration="1000"
+    >
+      <h2><span>Kontak</span> Kami</h2>
+      <p>
+        Tinggalkan pesan atau hubungi kami untuk mendapatkan informasi lebih
+        lanjut tentang produk dan layanan kami
+      </p>
+      <p>
+        (Kami telah menambahkan alamat toko kami, jika anda ingin membeli produk
+        secara langsung)
+      </p>
+
+      <div class="row">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d312.3957489756764!2d106.70462109177844!3d-6.159430578786205!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69f815dcec4e59%3A0xcf6752eb8443babf!2sToko.%20Jaja!5e0!3m2!1sid!2sid!4v1685219699170!5m2!1sid!2sid"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          class="map"
+        ></iframe>
+
+        <form action="">
+          <div class="input-group">
+            <i data-feather="user"></i>
+            <input type="text" placeholder="Nama" />
+          </div>
+          <div class="input-group">
+            <i data-feather="mail"></i>
+            <input type="text" placeholder="Email" />
+          </div>
+          <div class="input-group">
+            <i data-feather="phone"></i>
+            <input type="text" placeholder="No Handphone" />
+          </div>
+          <div class="input-group-pesan">
+            <i data-feather="help-circle"></i>
+            <input type="text" placeholder="Pesan" />
+          </div>
+          <button type="submit" class="btn">Kirim Pesan</button>
+        </form>
+      </div>
+    </section>
+    <!-- Contact Section End -->
+
+    <!-- Footer Start -->
+    <footer>
+      <div class="socials">
+        <a href="https://instagram.com/maulana__x3?igshid=MzNlNGNkZWQ4Mg=="
+          ><i data-feather="instagram"></i
+        ></a>
+        <a href="https://www.facebook.com/"><i data-feather="facebook"></i></a>
+        <a href="https://twitter.com/"><i data-feather="twitter"></i></a>
+        <a href="https://www.youtube.com/"><i data-feather="youtube"></i></a>
+      </div>
+
+      <div class="links">
+        <a href="#home">Home</a>
+        <a href="#about">Tentang Kami</a>
+        <a href="#menu">Menu</a>
+        <a href="#contact">Kontak Kami</a>
+      </div>
+
+      <div class="credit">
+        <p>
+          Created by
+          <a href="https://instagram.com/maulana__x3?igshid=MzNlNGNkZWQ4Mg=="
+            >Maulana Hidayatulloh Mujanah</a
+          >
+          | &copy; 2023.
+        </p>
+      </div>
+    </footer>
+    <!-- Footer End -->
+
+    <!-- Modal Box Item Detail Start -->
+    <div class="modal-1" id="item-detail-modal-1">
+      <div class="modal-container">
+        <a href="#" class="close-icon"><i data-feather="x"></i></a>
+        <div class="modal-content">
+          <img src="img/product/mild16.png" alt="mild16" />
+          <div class="product-content">
+            <h3>Mild 16</h3>
+            <p>
+              Rokok Mild, pilihan yang tepat untuk Anda yang mencari sensasi
+              merokok yang lebih ringan dan santai. Nikmati kelezatan rokok Mild
+              dengan rasa yang lembut dan tidak terlalu kuat.
+            </p>
+            <div class="product-star">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <div class="product-price">
+              Harga : Rp 25.000/Bungkus <span>Rp 30.000/Bungkus</span>
+            </div>
+            <a href="#"
+              ><i data-feather="shopping-cart"></i> <span>Belanja</span></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-2" id="item-detail-modal-2">
+      <div class="modal-container">
+        <a href="#" class="close-icon"><i data-feather="x"></i></a>
+        <div class="modal-content">
+          <img src="img/product/gudanggaram.png" alt="filter" />
+          <div class="product-content">
+            <h3>Gudang Garam Filter</h3>
+            <p>
+              Gudang Garam Filter, kelezatan tembakau Indonesia dengan teknologi
+              filter yang sempurna. Nikmati sensasi rokok Gudang Garam Filter
+              dengan rasa tembakau pilihan dan filtrasi yang optimal.
+            </p>
+            <div class="product-star">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <div class="product-price">
+              Harga : Rp 24.500/Bungkus <span>Rp 28.000/Bungkus</span>
+            </div>
+            <a href="#"
+              ><i data-feather="shopping-cart"></i> <span>Belanja</span></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-3" id="item-detail-modal-3">
+      <div class="modal-container">
+        <a href="#" class="close-icon"><i data-feather="x"></i></a>
+        <div class="modal-content">
+          <img src="img/product/super.jpg" alt="super" />
+          <div class="product-content">
+            <h3>Djarum Super</h3>
+            <p>
+              Rokok Djarum Super, kenikmatan tanpa kompromi untuk para pecinta
+              sensasi rokok yang intens. Nikmati keaslian dan kekuatan rokok
+              Djarum Super dalam setiap hisapan.
+            </p>
+            <div class="product-star">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <div class="product-price">
+              Harga : Rp 24.000/Bungkus <span>Rp 29.000/Bungkus</span>
+            </div>
+            <a href="#"
+              ><i data-feather="shopping-cart"></i> <span>Belanja</span></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-4" id="item-detail-modal-4">
+      <div class="modal-container">
+        <a href="#" class="close-icon"><i data-feather="x"></i></a>
+        <div class="modal-content">
+          <img src="img/product/djisamsoe.jpg" alt="super" />
+          <div class="product-content">
+            <h3>Dji Sam Soe</h3>
+            <p>
+              Rokok Dji Sam Soe, kesempurnaan dalam setiap hirupan dengan aroma
+              yang mendalam. Nikmati kualitas unggul dan cita rasa khas dari
+              rokok Dji Sam Soe.
+            </p>
+            <div class="product-star">
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+              <i class="bi bi-star-fill"></i>
+            </div>
+            <div class="product-price">
+              Harga : Rp 20.000/Bungkus <span>Rp 24.000/Bungkus</span>
+            </div>
+            <a href="#"
+              ><i data-feather="shopping-cart"></i> <span>Belanja</span></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal Box Item Detail End -->
+
+    <!-- AOS -->
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+
+    <!-- Father Icons -->
+    <script>
+      feather.replace();
+    </script>
+
+    <!-- My Javascript -->
+    <script src="js/script.js"></script>
+  </body>
+</html>
