@@ -78,7 +78,7 @@
       <main class="content">
         <h1>Mari Belanja di <span>WarungBangJaJa</span></h1>
         <p>WarungBangJaJa lengkap menjual segala kebutuhan pokok</p>
-        <a href="#menu" class="cta">Belanja Sekarang</a>
+        <a href="Form Login/login.html" class="cta">Belanja Sekarang</a>
       </main>
     </section>
     <!-- Hero Section end -->
@@ -170,7 +170,7 @@
         </div>
         <div class="menu-card">
           <img src="img/menu/aqua.jpg" alt="air" class="menu-card-img" />
-          <h3 class="menu-card-title">~ Kopi Bubuk ~</h3>
+          <h3 class="menu-card-title">~ Air Mineral ~</h3>
           <h5 class="menu-card-price">Harga : Rp 4.000/botol</h5>
           <a href="#" class="menu-card-belanja">Belanja</a>
         </div>
@@ -194,7 +194,7 @@
     <section
       class="product"
       id="product"
-      data-aos="fade-right"
+      data-aos="fade-down"
       data-aos-duration="1000"
     >
       <h2><span>Penawaran</span> Spesial</h2>
@@ -303,7 +303,7 @@
     <section
       id="contact"
       class="contact"
-      data-aos="fade-left"
+      data-aos="fade-down"
       data-aos-duration="1000"
     >
       <h2><span>Kontak</span> Kami</h2>
@@ -325,24 +325,37 @@
           class="map"
         ></iframe>
 
-        <form action="">
+        <form action="" name="warungbangjaja-contact-form">
+          <div class="alert">
+            <i class="bi bi-info-circle"></i
+            ><span>
+              <strong>Terima Kasih!</strong> Pesan anda sudah kami terima </span
+            ><a href="#" class="close"><i data-feather="x-circle"></i></a>
+          </div>
           <div class="input-group">
             <i data-feather="user"></i>
-            <input type="text" placeholder="Nama" />
+            <input type="text" placeholder="Nama" name="nama" />
           </div>
           <div class="input-group">
             <i data-feather="mail"></i>
-            <input type="text" placeholder="Email" />
+            <input type="email" placeholder="Email" name="email" />
           </div>
           <div class="input-group">
             <i data-feather="phone"></i>
-            <input type="text" placeholder="No Handphone" />
+            <input
+              type="text"
+              placeholder="No Handphone"
+              name="nomor-handphone"
+            />
           </div>
           <div class="input-group-pesan">
             <i data-feather="help-circle"></i>
-            <input type="text" placeholder="Pesan" />
+            <input type="text" placeholder="Pesan" name="pesan" />
           </div>
-          <button type="submit" class="btn">Kirim Pesan</button>
+          <div>
+            <button type="submit" class="btn">Kirim Pesan</button>
+            <div class="loader"></div>
+          </div>
         </form>
       </div>
     </section>
@@ -510,5 +523,35 @@
 
     <!-- My Javascript -->
     <script src="js/script.js"></script>
+
+    <!-- Kirim Pesan Lewat Google Sheets -->
+    <script>
+      const scriptURL =
+        "https://script.google.com/macros/s/AKfycbyscZwU_CUXb4iPARqUUycrcIwy8EFM-GFjl3cDq8-i6thHXmRugfLu5e5AnkxMxDZR/exec";
+      const form = document.forms["warungbangjaja-contact-form"];
+      const btnKirim = document.querySelector(".btn");
+      const Loading = document.querySelector(".loader");
+      const Alert = document.querySelector(".alert");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        // ketika tombol submit diklik
+        // tampilkan loading, hilangkan tombol kirim
+        btnKirim.classList.toggle("active");
+        Loading.classList.toggle("active");
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            // tampilkan tombol kirim, hilangkan loading
+            Loading.classList.toggle("active");
+            btnKirim.classList.toggle("active");
+            // tampilkan alert
+            Alert.classList.toggle("active");
+            // reset form
+            form.reset();
+            console.log("Success!", response);
+          })
+          .catch((error) => console.error("Error!", error.message));
+      });
+    </script>
   </body>
 </html>

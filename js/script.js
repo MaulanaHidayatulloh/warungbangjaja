@@ -24,7 +24,7 @@ document.querySelector("#shopping-cart-button").onclick = (e) => {
   e.preventDefault();
 };
 
-// Klik di luar elemen
+// Klik di luar elemen hamburger menu, shopping cart, search form
 const hm = document.querySelector("#hamburger-menu");
 const sb = document.querySelector("#search-button");
 const sc = document.querySelector("#shopping-cart-button");
@@ -122,4 +122,11 @@ window.onclick = (e) => {
   if (e.target === itemDetailModal4) {
     itemDetailModal4.style.display = "none";
   }
+};
+
+// Alert
+// klik tombol close alert
+document.querySelector(".alert .close").onclick = (e) => {
+  Alert.classList.remove("active");
+  e.preventDefault();
 };
