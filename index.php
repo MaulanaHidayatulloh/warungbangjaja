@@ -1,3 +1,30 @@
+<?php
+session_start();
+
+if(!isset($_SESSION["login"])) {
+  header("location: form-login/");
+  exit;
+}
+
+// Koneksi ke database
+$host = "localhost";
+$user = "root";
+$password = ""; // Biarkan kosong jika tidak ada password
+$database = "produk";
+
+$conn = new mysqli($host, $user, $password, $database);
+
+// Cek koneksi
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Query untuk mengambil data produk dari database
+$sql = "SELECT * FROM products";
+$result = $conn->query($sql);
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -30,7 +57,12 @@
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
     <!-- My Style -->
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Midtrans -->
+    <script type="text/javascript"
+      src="https://app.sandbox.midtrans.com/snap/snap.js"
+      data-client-key="SB-Mid-client-5owSJyfdgSAZ7_Ar"></script>
   </head>
 
   <body>
@@ -41,6 +73,7 @@
       </a>
 
       <div class="navbar-nav">
+        <h1 id="openclose"><span id="status"></span></h1>
         <a href="#home">Home</a>
         <a href="#about">Tentang Kami</a>
         <a href="#menu">Menu</a>
@@ -50,9 +83,9 @@
 
       <div class="navbar-extra">
         <a href="#" id="search-button"><i data-feather="search"></i></a>
-        <a href="#" id="shopping-cart-button"
-          ><i data-feather="shopping-cart"></i
-        ></a>
+        <a href="#" id="shopping-cart-button"><i data-feather="shopping-cart"></i><span class="keranjang-belanja">Keranjang</span></a>
+        <a href="http://localhost/warung-bangjaja/form-login/logout.php"
+        id="logout"><i data-feather="log-out"></i><span class="logout-text">Logout</span></a>
         <a href="#" id="hamburger-menu"><i data-feather="menu"></i></a>
       </div>
 
@@ -68,7 +101,79 @@
         <div class="title-shopping-cart">
           <h2>Pesanan Anda</h2>
         </div>
-      </div>
+
+        <?php
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+          $totalHarga = $_POST['total_harga'];
+          $userId = $_SESSION['user_id']; // Anda bisa mendapatkan user_id dari session setelah login
+      
+          // Query untuk menyimpan order ke database
+          $sql = "INSERT INTO orders (user_id, product_id, quantity, total_price) VALUES (?, ?, ?, ?)";
+      
+          if ($stmt = $conn->prepare($sql)) {
+              foreach ($_POST['jumlah'] as $productId => $quantity) {
+                  $totalPrice = $quantity * $_POST['harga_' . $productId];
+                  $stmt->bind_param("iiii", $userId, $productId, $quantity, $totalPrice);
+                  $stmt->execute();
+              }
+              $stmt->close();
+          }
+      
+          $conn->close();
+      
+          // Redirect ke halaman daftar order
+          // header("Location: daftar_order.php");
+          // exit();
+        } 
+
+        ?>
+      
+      <form action="" method="post">
+        <div class="container">
+        <?php
+            // Periksa apakah ada data produk yang ditemukan
+            if ($result->num_rows > 0) {
+                // Loop untuk setiap baris data produk
+                while ($row = $result->fetch_assoc()) {
+                    // Menampilkan data produk dalam elemen HTML
+                    echo '<div class="cart-item-1" id="cart-item-' . $row["id"] . '">';
+                    echo '<img src="' . $row["image"] . '" alt="' . $row["name"] . '"/>';
+                    echo '<div class="item-detail">';
+                    echo '<h3>' . $row["name"] . '</h3>';
+                    echo '<div class="item-price" id="harga_' . $row["id"] . '" value="' . $row["price"] . '">Rp ' . $row["price"] . '</div>';
+                    echo '<div class="stok" id="stock_' . $row["id"] . '" value="' . $row["stock"] .'">Stok Barang : ' .$row["stock"] . '</div>';
+                    echo '<div>Jumlah Pembelian : ';
+                    echo '<input type="number" id="jumlah_' . $row["id"] . '" value="0" min="0" max="' .$row["stock"] . '" class="jumlah" onchange="total()" />';
+                    echo '</div>';
+                    echo '</div>';
+                    echo '<a href="#" id="remove-item-' . $row["id"] . '" class="remove-item"><i class="bi bi-trash"></i></a>';
+                    echo '</div>';
+                }
+            } else {
+                echo "Tidak ada produk yang ditemukan.";
+            }
+            $conn->close();
+            ?>
+
+        </div>
+
+        <div class="total-harga">
+          <h2 style="display : flex">Total Harga<p style="font-size : 0.9rem; padding-top : 1rem; padding-right : 0.5rem">+ 10.000</p> : <span>Rp</span></h2>
+          <input
+            type="text"
+            class="totalharga"
+            id="total_harga"
+            value="0"
+            readonly
+          />
+        </div>
+
+        <div style="display:flex; justify-content: center;">
+          <button class="checkout_button" id="checkout_button" type="submit" style="font-size: 1rem; background-color: #4CAF50; padding: 1rem 12rem; cursor:pointer; bottom: -4rem; position: relative; border-radius: 1rem; font-weight:700"><span>Bayar Sekarang</span></button>
+        </div>
+      </form>
+    </div>
+      
       <!-- Shopping Cart End -->
     </nav>
     <!-- Navbar End -->
@@ -78,7 +183,7 @@
       <main class="content">
         <h1>Mari Belanja di <span>WarungBangJaJa</span></h1>
         <p>WarungBangJaJa lengkap menjual segala kebutuhan pokok</p>
-        <a href="Form Login/login.html" class="cta">Belanja Sekarang</a>
+        <a href="daftar_order.php" class="cta">Belanja Sekarang</a>
       </main>
     </section>
     <!-- Hero Section end -->
@@ -125,67 +230,49 @@
       <p>Berikut produk Yang Toko Kami Jual :</p>
       <p>(Silakan Anda Melihat terlebih Dahulu Dan Dipilih Terlebih Dahulu)</p>
 
+      <?php
+      // Koneksi ke database
+      $host = "localhost";
+      $user = "root";
+      $password = ""; // Biarkan kosong jika tidak ada password
+      $database = "produk";
+
+      $conn = new mysqli($host, $user, $password, $database);
+
+      // Cek koneksi
+      if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+      }
+
+      // Query untuk mengambil data produk dari database
+      $sql = "SELECT * FROM products WHERE special = 0";
+      $result = $conn->query($sql);     
+      ?>
+
       <div class="row">
-        <div class="menu-card">
-          <img src="img/menu/beras.jpg" alt="beras" class="menu-card-img" />
-          <h3 class="menu-card-title">~ Beras ~</h3>
-          <h5 class="menu-card-price">Harga : Rp 12.000/liter</h5>
-          <a href="#" class="menu-card-belanja">Belanja</a>
-        </div>
-        <div class="menu-card">
-          <img src="img/menu/minyak.jpg" alt="minyak" class="menu-card-img" />
-          <h3 class="menu-card-title">~ Minyak ~</h3>
-          <h5 class="menu-card-price">Harga : Rp 20.000/liter</h5>
-          <a href="#" class="menu-card-belanja">Belanja</a>
-        </div>
-        <div class="menu-card">
-          <img src="img/menu/gula.jpg" alt="gula" class="menu-card-img" />
-          <h3 class="menu-card-title">~ Gula ~</h3>
-          <h5 class="menu-card-price">Harga : Rp 10.000/Kg</h5>
-          <a href="#" class="menu-card-belanja">Belanja</a>
-        </div>
-        <div class="menu-card">
-          <img src="img/menu/susu.jpg" alt="susu" class="menu-card-img" />
-          <h3 class="menu-card-title">~ Susu ~</h3>
-          <h5 class="menu-card-price">Harga : Rp 13.000/370gram</h5>
-          <a href="#" class="menu-card-belanja">Belanja</a>
-        </div>
-        <div class="menu-card">
-          <img src="img/menu/telur.jpg" alt="telur" class="menu-card-img" />
-          <h3 class="menu-card-title">~ Telur ~</h3>
-          <h5 class="menu-card-price">Harga : Rp 29.000/Kg</h5>
-          <a href="#" class="menu-card-belanja">Belanja</a>
-        </div>
-        <div class="menu-card">
-          <img src="img/menu/garam.jpg" alt="garam" class="menu-card-img" />
-          <h3 class="menu-card-title">~ Garam ~</h3>
-          <h5 class="menu-card-price">Harga : Rp 3.000/250gram</h5>
-          <a href="#" class="menu-card-belanja">Belanja</a>
-        </div>
-        <div class="menu-card">
-          <img src="img/menu/gas.jpeg" alt="gas" class="menu-card-img" />
-          <h3 class="menu-card-title">~ Gas Elpiji ~</h3>
-          <h5 class="menu-card-price">Harga : Rp 19.000/3Kg</h5>
-          <a href="#" class="menu-card-belanja">Belanja</a>
-        </div>
-        <div class="menu-card">
-          <img src="img/menu/aqua.jpg" alt="air" class="menu-card-img" />
-          <h3 class="menu-card-title">~ Air Mineral ~</h3>
-          <h5 class="menu-card-price">Harga : Rp 4.000/botol</h5>
-          <a href="#" class="menu-card-belanja">Belanja</a>
-        </div>
-        <div class="menu-card">
-          <img src="img/menu/kopi.png" alt="kopi" class="menu-card-img" />
-          <h3 class="menu-card-title">~ Kopi Bubuk ~</h3>
-          <h5 class="menu-card-price">Harga : Rp 50.000/Kg</h5>
-          <a href="#" class="menu-card-belanja">Belanja</a>
-        </div>
-        <div class="menu-card">
-          <img src="img/menu/teh.jpg" alt="teh" class="menu-card-img" />
-          <h3 class="menu-card-title">~ Teh Celup ~</h3>
-          <h5 class="menu-card-price">Harga : Rp 6.000/pack</h5>
-          <a href="#" class="menu-card-belanja">Belanja</a>
-        </div>
+        <?php
+            // Periksa apakah ada data produk yang ditemukan
+            if ($result->num_rows > 0) {
+                // Loop untuk setiap baris data produk
+                while ($row = $result->fetch_assoc()) {
+                    // Menampilkan data produk dalam elemen HTML
+                    echo '<div class="menu-card">';
+                    echo '<img src="' . $row["image"] . '" alt="' . $row["name"] . '" class="menu-card-img" />';
+                    echo '<h3 class="menu-card-title">' . $row["name"] . '</h3>';
+                    echo '<h5 class="menu-card-price">Harga : Rp ' . number_format($row["price"], 0, ",", ".") . '</h5>';
+                    echo '<a href="#" id="card-belanja-' . $row["id"] . '" class="menu-card-belanja">Belanja</a>';
+                    echo '<div class="informasi" id="informasi-' . $row["id"] . '">';
+                    echo '<i class="bi bi-info-circle"></i>';
+                    echo '<span><strong>Item Ini!</strong> Sudah Masuk Ke keranjang</span>';
+                    echo '</div>';
+                    echo '</div>';
+                }
+            } else {
+                echo "Tidak ada produk yang ditemukan.";
+            }
+            $conn->close();
+            ?>
+
       </div>
     </section>
     <!-- Menu Section end -->
@@ -200,101 +287,64 @@
       <h2><span>Penawaran</span> Spesial</h2>
       <p>Berikut Penawaran Spesial Untuk Anda Di Toko Kami :</p>
       <p>(Silakan Anda Melihat terlebih Dahulu Dan Dipilih Terlebih Dahulu)</p>
+      
+      <?php
+      // Koneksi ke database
+      $host = "localhost";
+      $user = "root";
+      $password = ""; // Biarkan kosong jika tidak ada password
+      $database = "produk";
+
+      $conn = new mysqli($host, $user, $password, $database);
+
+      // Cek koneksi
+      if ($conn->connect_error) {
+        die("Connection failed: " . $conn->connect_error);
+      }
+
+      // Query untuk mengambil data produk dari database
+      $sql = "SELECT * FROM products WHERE special = 1";
+      $result = $conn->query($sql);     
+      ?>
 
       <div class="row">
-        <div class="product-card">
-          <div class="product-icons">
-            <a href="#"><i data-feather="shopping-cart"></i></a>
-            <a href="#" class="item-detail-button-1"
-              ><i data-feather="eye"></i
-            ></a>
-          </div>
-          <div class="product-image">
-            <img src="img/product/mild16.png" alt="product 1" />
-          </div>
-          <div class="product-content">
-            <h3>Rokok Sampoerna Mild 16</h3>
-            <div class="product-star">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-            </div>
-            <div class="product-price">
-              Harga : Rp 25.000/Bungkus <span>Rp 30.000/Bungkus</span>
-            </div>
-          </div>
-        </div>
-        <div class="product-card">
-          <div class="product-icons">
-            <a href="#"><i data-feather="shopping-cart"></i></a>
-            <a href="#" class="item-detail-button-2"
-              ><i data-feather="eye"></i
-            ></a>
-          </div>
-          <div class="product-image">
-            <img src="img/product/gudanggaram.png" alt="product 2" />
-          </div>
-          <div class="product-content">
-            <h3>Rokok Gudang Garam Filter</h3>
-            <div class="product-star">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-            </div>
-            <div class="product-price">
-              Harga : Rp 24.500/Bungkus <span>Rp 28.000/Bungkus</span>
-            </div>
-          </div>
-        </div>
-        <div class="product-card">
-          <div class="product-icons">
-            <a href="#"><i data-feather="shopping-cart"></i></a>
-            <a href="#" class="item-detail-button-3"
-              ><i data-feather="eye"></i
-            ></a>
-          </div>
-          <div class="product-image">
-            <img src="img/product/super.jpg" alt="product 3" />
-          </div>
-          <div class="product-content">
-            <h3>Rokok Djarum Super</h3>
-            <div class="product-star">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-            </div>
-            <div class="product-price">
-              Harga : Rp 24.000/Bungkus <span>Rp 29.000/Bungkus</span>
-            </div>
-          </div>
-        </div>
-        <div class="product-card">
-          <div class="product-icons">
-            <a href="#"><i data-feather="shopping-cart"></i></a>
-            <a href="#" class="item-detail-button-4"
-              ><i data-feather="eye"></i
-            ></a>
-          </div>
-          <div class="product-image">
-            <img src="img/product/djisamsoe.jpg" alt="product 4" />
-          </div>
-          <div class="product-content">
-            <h3>Rokok Dji Sam Soe</h3>
-            <div class="product-star">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-            </div>
-            <div class="product-price">
-              Harga : Rp 20.000/Bungkus <span>Rp 24.000/Bungkus</span>
-            </div>
-          </div>
-        </div>
+      <?php
+        // Periksa apakah ada data produk yang ditemukan
+        if ($result->num_rows > 0) {
+          // Loop untuk setiap baris data produk
+          while ($row = $result->fetch_assoc()) {
+            // Menampilkan data produk dalam elemen HTML
+            // echo '<div class="row">';
+            echo '<div class="product-card">';
+            echo '<div class="product-icons">';
+            echo '<a href="#" class="cancel" id="cancel-' . $row["id"] . '"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/></svg></a>';
+            echo '<a href="#" id="keranjang-belanja-' . $row["id"] . '"><svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+            <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/></svg></a>';
+            echo '<a href="#" class="item-detail-button-' . $row["id"] . '"><i data-feather="eye"></i></a>';
+            echo '</div>';
+            echo '<div class="product-image">';
+            echo '<img src="' . $row["image"] . '" alt="' . $row["name"] . '"/>';
+            echo '</div>';
+            echo '<div class="product-content">';
+            echo '<h3>' . $row["name"] . '</h3>';
+            echo '<div class="product-star">';
+            echo '<i class="bi bi-star-fill"></i>';
+            echo '<i class="bi bi-star-fill"></i>';
+            echo '<i class="bi bi-star-fill"></i>';
+            echo '<i class="bi bi-star-fill"></i>';
+            echo '<i class="bi bi-star-fill"></i>';
+            echo '</div>';
+            echo '<div class="product-price">Harga : Rp  ' . number_format($row["price"], 0, ",", ".") . ' <span>Rp ' . number_format($row["nodiscount"], 0, ",", ".") . '</span></div>';
+            echo '</div>';
+            echo '</div>';
+          }
+        } else {
+            echo "Tidak ada produk yang ditemukan.";
+        }
+        $conn->close();
+      ?>
+
       </div>
     </section>
     <!-- Penawaran Section End -->
@@ -522,7 +572,7 @@
     </script>
 
     <!-- My Javascript -->
-    <script src="js/script.js"></script>
+    <script src="script.js"></script>
 
     <!-- Kirim Pesan Lewat Google Sheets -->
     <script>
@@ -555,3 +605,4 @@
     </script>
   </body>
 </html>
+

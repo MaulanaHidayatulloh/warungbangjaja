@@ -1,0 +1,6 @@
+{
+    "require": {
+        "swiftmailer/swiftmailer": "^6.3",
+        "midtrans/midtrans-php": "^2.5"
+    }
+}

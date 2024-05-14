@@ -1,0 +1,76 @@
+body {
+  text-align: center;
+}
+
+.daftar-order-user {
+  font-family: Arial, sans-serif;
+  margin-top: 20px;
+}
+
+.user-section {
+  margin-bottom: 20px;
+}
+
+.user-section h3 {
+  background-color: #f2f2f2;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.order-section {
+  margin-bottom: 20px;
+}
+
+.order-section h4 {
+  background-color: #e6f7ff;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.order-list {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.order-list th,
+.order-list td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+.order-list th {
+  background-color: #f2f2f2;
+}
+
+.order-list tbody tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.order-list tbody tr:hover {
+  background-color: #ddd;
+}
+
+.total-harga {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.total-harga h2 {
+  font-size: 18px;
+}
+
+.total-harga input {
+  font-size: 18px;
+  border: none;
+  background-color: #f2f2f2;
+  padding: 5px 10px;
+  width: 150px;
+  text-align: right;
+}
+
+.text-right {
+  text-align: right;
+}
