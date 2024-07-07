@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-if(!isset($_SESSION["login"])) {
+if (!isset($_SESSION["login"]) || $_SESSION["role"] != 'user') {
   header("location: form-login/");
   exit;
 }
@@ -89,8 +89,8 @@ $result = $conn->query($sql);
         <a href="#" id="hamburger-menu"><i data-feather="menu"></i></a>
       </div>
 
-      <!-- Search Form Start -->
-      <div class="search-form">
+       <!-- Search Form Start -->
+       <div class="search-form">
         <input type="search" id="search-box" placeholder="Mau Cari Apa ?" />
         <label for="search-box"><i data-feather="search"></i></label>
       </div>
@@ -98,39 +98,40 @@ $result = $conn->query($sql);
 
       <!-- Shopping Cart Start -->
       <div class="shopping-cart">
-        <div class="title-shopping-cart">
-          <h2>Pesanan Anda</h2>
-        </div>
+    <div class="title-shopping-cart">
+        <h2>Pesanan Anda</h2>
+    </div>
 
-        <?php
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-          $totalHarga = $_POST['total_harga'];
-          $userId = $_SESSION['user_id']; // Anda bisa mendapatkan user_id dari session setelah login
-      
-          // Query untuk menyimpan order ke database
-          $sql = "INSERT INTO orders (user_id, product_id, quantity, total_price) VALUES (?, ?, ?, ?)";
-      
-          if ($stmt = $conn->prepare($sql)) {
-              foreach ($_POST['jumlah'] as $productId => $quantity) {
-                  $totalPrice = $quantity * $_POST['harga_' . $productId];
-                  $stmt->bind_param("iiii", $userId, $productId, $quantity, $totalPrice);
-                  $stmt->execute();
-              }
-              $stmt->close();
-          }
-      
-          $conn->close();
-      
-          // Redirect ke halaman daftar order
-          // header("Location: daftar_order.php");
-          // exit();
-        } 
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $userId = $_SESSION['user_id']; // Anda bisa mendapatkan user_id dari session setelah login
+        $items = json_decode($_POST['items'], true);
 
-        ?>
-      
-      <form action="" method="post">
+        // Query untuk menyimpan order ke database
+        $sql = "INSERT INTO orders (user_id, product_id, quantity, total_price) VALUES (?, ?, ?, ?)";
+
+        if ($stmt = $conn->prepare($sql)) {
+            foreach ($items as $item) {
+                $productId = $item['id'];
+                $quantity = $item['quantity'];
+                $totalPrice = $item['quantity'] * $item['price'];
+                $stmt->bind_param("iiii", $userId, $productId, $quantity, $totalPrice);
+                $stmt->execute();
+            }
+            $stmt->close();
+        }
+
+        $conn->close();
+
+        // Redirect ke halaman daftar order
+        // header("Location: daftar_order.php");
+        // exit();
+    }
+    ?>
+
+    <form action="" method="post">
         <div class="container">
-        <?php
+            <?php
             // Periksa apakah ada data produk yang ditemukan
             if ($result->num_rows > 0) {
                 // Loop untuk setiap baris data produk
@@ -143,7 +144,7 @@ $result = $conn->query($sql);
                     echo '<div class="item-price" id="harga_' . $row["id"] . '" value="' . $row["price"] . '">Rp ' . $row["price"] . '</div>';
                     echo '<div class="stok" id="stock_' . $row["id"] . '" value="' . $row["stock"] .'">Stok Barang : ' .$row["stock"] . '</div>';
                     echo '<div>Jumlah Pembelian : ';
-                    echo '<input type="number" id="jumlah_' . $row["id"] . '" value="0" min="0" max="' .$row["stock"] . '" class="jumlah" onchange="total()" />';
+                    echo '<input type="number" id="jumlah_' . $row["id"] . '" value="0" min="0" max="' .$row["stock"] . '" class="jumlah" onchange="updateTotal()" />';
                     echo '</div>';
                     echo '</div>';
                     echo '<a href="#" id="remove-item-' . $row["id"] . '" class="remove-item"><i class="bi bi-trash"></i></a>';
@@ -154,25 +155,21 @@ $result = $conn->query($sql);
             }
             $conn->close();
             ?>
-
         </div>
 
         <div class="total-harga">
-          <h2 style="display : flex">Total Harga<p style="font-size : 0.9rem; padding-top : 1rem; padding-right : 0.5rem">+ 10.000</p> : <span>Rp</span></h2>
-          <input
-            type="text"
-            class="totalharga"
-            id="total_harga"
-            value="0"
-            readonly
-          />
+            <h2 style="display : flex">Total Harga<p style="font-size : 0.9rem; padding-top : 1rem; padding-right : 0.5rem">+ 10.000</p> : <span>Rp</span></h2>
+            <input type="text" class="totalharga" id="total_harga" value="0" readonly />
         </div>
 
         <div style="display:flex; justify-content: center;">
-          <button class="checkout_button" id="checkout_button" type="submit" style="font-size: 1rem; background-color: #4CAF50; padding: 1rem 12rem; cursor:pointer; bottom: -4rem; position: relative; border-radius: 1rem; font-weight:700"><span>Bayar Sekarang</span></button>
+            <button class="checkout_button" id="checkout_button" type="submit" style="font-size: 1rem; background-color: #4CAF50; padding: 1rem 12rem; cursor:pointer; bottom: -4rem; position: relative; border-radius: 1rem; font-weight:700"><span>Bayar Sekarang</span></button>
         </div>
-      </form>
-    </div>
+    </form>
+</div>
+
+
+
       
       <!-- Shopping Cart End -->
     </nav>

@@ -305,20 +305,16 @@ document.addEventListener("DOMContentLoaded", function () {
 //   e.preventDefault();
 // };
 
-// Klik tombol sampah shopping cart
 document.addEventListener("DOMContentLoaded", function () {
   // Mendapatkan semua elemen tombol "Hapus" berdasarkan id produk
   const removeButtons = document.querySelectorAll("[id^=remove-item-]");
 
   // Menambahkan event listener untuk setiap tombol "Hapus"
-  removeButtons.forEach(function (removebutton) {
-    removebutton.onclick = function (e) {
-      const productID = removebutton.id.split("-")[2];
-      const productNameElement = document
-        .getElementById("cart-item-" + productID)
-        .querySelector(".item-detail h3");
-      const productNameWords = productNameElement.innerText.split(" ");
-      const productName = productNameWords.join(" ");
+  removeButtons.forEach(function (removeButton) {
+    removeButton.onclick = function (e) {
+      e.preventDefault();
+
+      const productID = removeButton.id.split("-")[2];
       const cartItem = document.querySelector("#cart-item-" + productID);
       const jumlahProduk = document.getElementById("jumlah_" + productID);
       const cardBelanja = document.querySelector("#card-belanja-" + productID);
@@ -327,294 +323,160 @@ document.addEventListener("DOMContentLoaded", function () {
       const keranjang = document.querySelector(
         "#keranjang-belanja-" + productID
       );
-      const Total = document.getElementById("total_harga");
 
-      cartItem.classList.toggle("active");
-      if (jumlahProduk) {
-        jumlahProduk.value = "0"; // Set nilai jumlah produk menjadi 0 jika elemen ditemukan
+      if (cartItem) {
+        // cartItem.remove(); // Menghapus elemen item dari DOM
+        updateTotal(); // Memperbarui total harga setelah item dihapus
+        cartItem.classList.toggle("active");
       }
+
+      // Set nilai jumlah produk menjadi 0 jika elemen ditemukan
+      if (jumlahProduk) {
+        jumlahProduk.value = "0";
+      }
+
+      // Menampilkan kembali keranjang belanja, cancel, dan informasi jika ada
       if (keranjang) {
         keranjang.style.display = "flex";
-        cancel.classList.toggle("active");
       }
+
+      if (cancel) {
+        cancel.classList.toggle("active"); // Tambahkan kelas active pada cancel
+      }
+
       if (cardBelanja) {
         cardBelanja.style.display = "block";
-        informasi.classList.toggle("active");
       }
-      total();
-      Total.value = 0;
-      e.preventDefault();
+
+      if (informasi) {
+        informasi.classList.toggle("active"); // Tambahkan kelas active pada informasi
+      }
+      updateTotal(); // Memastikan total harga terupdate setelah perubahan
     };
   });
-});
 
-// Beras
-// document.getElementById("remove-item-1").onclick = (e) => {
-//   cartItem1.classList.toggle("active");
-//   document.getElementById("jumlah_beras").value = "0";
-//   total();
-//   cardBelanja1.style.display = "inline-block";
-//   informasi1.classList.toggle("active");
-//   e.preventDefault();
-// };
-
-// // Minyak
-// document.getElementById("remove-item-2").onclick = (e) => {
-//   cartItem2.classList.toggle("active");
-//   document.getElementById("jumlah_minyak").value = "0";
-//   total();
-//   cardBelanja2.classList.toggle("active");
-//   informasi2.classList.toggle("active");
-//   e.preventDefault();
-// };
-
-// // Gula
-// document.getElementById("remove-item-3").onclick = (e) => {
-//   cartItem3.classList.toggle("active");
-//   document.getElementById("jumlah_gula").value = "0";
-//   total();
-//   cardBelanja3.classList.toggle("active");
-//   informasi3.classList.toggle("active");
-//   e.preventDefault();
-// };
-
-// // Susu
-// document.getElementById("remove-item-4").onclick = (e) => {
-//   cartItem4.classList.toggle("active");
-//   document.getElementById("jumlah_susu").value = "0";
-//   total();
-//   cardBelanja4.classList.toggle("active");
-//   informasi4.classList.toggle("active");
-//   e.preventDefault();
-// };
-
-// // Telur
-// document.getElementById("remove-item-5").onclick = (e) => {
-//   cartItem5.classList.toggle("active");
-//   document.getElementById("jumlah_telur").value = "0";
-//   total();
-//   cardBelanja5.classList.toggle("active");
-//   informasi5.classList.toggle("active");
-//   e.preventDefault();
-// };
-
-// // Garam
-// document.getElementById("remove-item-6").onclick = (e) => {
-//   cartItem6.classList.toggle("active");
-//   document.getElementById("jumlah_garam").value = "0";
-//   total();
-//   cardBelanja6.classList.toggle("active");
-//   informasi6.classList.toggle("active");
-//   e.preventDefault();
-// };
-
-// Total Harga
-function total() {
-  let total_ = 0;
-  let total_harga = 0;
-  let item_ids = [];
-
-  // Loop untuk setiap item dalam keranjang
-  document.querySelectorAll(".cart-item-1").forEach((item) => {
-    let id = item.id.split("-")[2];
-    let hargaElem = document.getElementById("harga_" + id);
-    let stockElem = document.getElementById("stock_" + id);
-    let jumlahElem = document.getElementById("jumlah_" + id);
-
-    if (hargaElem && stockElem && jumlahElem) {
-      // Periksa keberadaan elemen
-      let harga = parseFloat(hargaElem.getAttribute("value"));
-      let stock = parseInt(stockElem.getAttribute("value"));
-      let jumlah = parseInt(jumlahElem.value);
-      let pengiriman = parseInt(10000);
-
-      // Memperbarui total harga
-      total_ += harga * jumlah;
-      total_harga = total_ + pengiriman;
-
-      // Jika jumlah pembelian tidak 0, tambahkan ke list item
-      if (jumlah > 0) {
-        item_ids.push({
-          id: id,
-          price: harga, // Tambahkan harga
-          quantity: jumlah,
-        });
-      }
-    }
+  // Event listener untuk input jumlah barang
+  document.querySelectorAll(".jumlah").forEach((input) => {
+    input.addEventListener("input", updateTotal);
   });
 
-  // Update tampilan total harga
-  document.getElementById("total_harga").value = total_harga;
+  // Event listener untuk tombol checkout
+  document
+    .querySelector(".checkout_button")
+    .addEventListener("click", async function (e) {
+      e.preventDefault();
 
-  // Kirim data ke server untuk penyimpanan
-  if (item_ids.length > 0) {
-    console.log("Item yang akan dibeli:", item_ids); // Debug: Tampilkan item yang akan dibeli
-    fetch("placeOrder.php", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        items: item_ids,
-        total_harga: total_harga, // Kirim total harga ke server
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          console.log("Order berhasil ditambahkan/updated ke database.");
+      let total_harga = parseFloat(
+        document.getElementById("total_harga").value
+      );
+      let item_ids = [];
 
-          let snapToken = data.snapToken; // Ambil snapToken dari respons
+      document.querySelectorAll(".cart-item-1").forEach((item) => {
+        let id = item.id.split("-")[2];
+        let hargaElem = document.getElementById("harga_" + id);
+        let jumlahElem = document.getElementById("jumlah_" + id);
 
-          // Tambahkan order ke database
-          fetch("add_order.php", {
+        if (hargaElem && jumlahElem) {
+          let harga = parseFloat(hargaElem.getAttribute("value"));
+          let jumlah = parseInt(jumlahElem.value);
+
+          if (jumlah > 0) {
+            item_ids.push({
+              id: id,
+              price: harga,
+              quantity: jumlah,
+            });
+          }
+        }
+      });
+
+      if (item_ids.length > 0) {
+        try {
+          const response = await fetch("placeOrder.php", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               items: item_ids,
+              total_harga: total_harga,
             }),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              if (data.success) {
-                // Redirect to Midtrans Payment Page
-                window.snap.pay(snapToken, {
-                  onSuccess: function (result) {
-                    console.log("Payment successful!", result);
-                  },
-                  onPending: function (result) {
-                    console.log("Payment pending.", result);
-                  },
-                  onError: function (result) {
-                    console.log("Payment error.", result);
-                  },
-                  onClose: function () {
-                    console.log("Payment closed without success.");
-                  },
-                });
-              } else {
-                console.error(
-                  "Gagal menambahkan/updated order ke database:",
-                  data.message
-                );
-              }
+          });
+
+          const data = await response.json();
+          if (data.success) {
+            let snapToken = data.snapToken;
+
+            fetch("add_order.php", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                items: item_ids,
+              }),
             })
-            .catch((error) => {
-              console.error("Error:", error);
-            });
-        } else {
-          console.error(
-            "Gagal menambahkan/updated order ke database:",
-            data.message
-          );
+              .then((response) => response.json())
+              .then((data) => {
+                if (data.success) {
+                  window.snap.pay(snapToken, {
+                    onSuccess: function (result) {
+                      console.log("Payment successful!", result);
+                    },
+                    onPending: function (result) {
+                      console.log("Payment pending.", result);
+                    },
+                    onError: function (result) {
+                      console.log("Payment error.", result);
+                    },
+                    onClose: function () {
+                      console.log("Payment closed without success.");
+                    },
+                  });
+                } else {
+                  console.error(
+                    "Gagal menambahkan/updated order ke database:",
+                    data.message
+                  );
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          } else {
+            console.error("Gagal mendapatkan token pembayaran:", data.message);
+          }
+        } catch (err) {
+          console.error("Error:", err.message);
         }
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
+      }
+    });
+});
+
+function updateTotal() {
+  let total_ = 0;
+  let pengiriman = 10000;
+
+  // Loop untuk setiap item dalam keranjang
+  document.querySelectorAll(".cart-item-1").forEach((item) => {
+    let id = item.id.split("-")[2];
+    let hargaElem = document.getElementById("harga_" + id);
+    let jumlahElem = document.getElementById("jumlah_" + id);
+
+    if (hargaElem && jumlahElem) {
+      let harga = parseFloat(hargaElem.getAttribute("value"));
+      let jumlah = parseInt(jumlahElem.value);
+
+      total_ += harga * jumlah;
+    }
+  });
+
+  let total_harga = total_ + pengiriman;
+  document.getElementById("total_harga").value = total_harga;
 }
 
 //  Tampilkan total harga tanpa pemisah ribuan
 //  document.getElementById("total_harga").value = totalHarga;
-
-// function total() {
-//   var beras = 12000 * parseInt(document.getElementById("jumlah_beras").value);
-//   var minyak = 20000 * parseInt(document.getElementById("jumlah_minyak").value);
-//   var gula = 10000 * parseInt(document.getElementById("jumlah_gula").value);
-//   var susu = 13000 * parseInt(document.getElementById("jumlah_susu").value);
-//   var telur = 29000 * parseInt(document.getElementById("jumlah_telur").value);
-//   var garam = 3000 * parseInt(document.getElementById("jumlah_garam").value);
-//   var grand_total = beras + minyak + gula + susu + telur + garam;
-//   document.getElementById("total_harga").value = grand_total;
-// }
-
-// Batas Maksimal jumlah pembelian sesuai stock
-// Beras
-// const Stok_beras = document.getElementById("stock_beras").value;
-// const Pembelian_beras = document.getElementById("jumlah_beras");
-// // Mengatur atribut "max" pada input pembelian sesuai dengan nilai stok
-// Pembelian_beras.setAttribute("max", Stok_beras);
-// // Menambahkan event listener untuk memastikan nilai pembelian tidak melebihi stok saat input berubah
-// Pembelian_beras.addEventListener("input", function () {
-//   const PembelianBeras = parseInt(Pembelian_beras.value);
-
-//   if (PembelianBeras > Stok_beras) {
-//     Pembelian_beras.value = Stok_beras;
-//   }
-// });
-
-// // Minyak
-// const Stok_minyak = document.getElementById("stock_minyak").value;
-// const Pembelian_minyak = document.getElementById("jumlah_minyak");
-// // Mengatur atribut "max" pada input pembelian sesuai dengan nilai stok
-// Pembelian_minyak.setAttribute("max", Stok_minyak);
-// // Menambahkan event listener untuk memastikan nilai pembelian tidak melebihi stok saat input berubah
-// Pembelian_minyak.addEventListener("input", function () {
-//   const PembelianMinyak = parseInt(Pembelian_minyak.value);
-
-//   if (PembelianMinyak > Stok_minyak) {
-//     Pembelian_minyak.value = Stok_minyak;
-//   }
-// });
-
-// // Gula
-// const Stok_gula = document.getElementById("stock_gula").value;
-// const Pembelian_gula = document.getElementById("jumlah_gula");
-// // Mengatur atribut "max" pada input pembelian sesuai dengan nilai stok
-// Pembelian_gula.setAttribute("max", Stok_gula);
-// // Menambahkan event listener untuk memastikan nilai pembelian tidak melebihi stok saat input berubah
-// Pembelian_gula.addEventListener("input", function () {
-//   const PembelianGula = parseInt(Pembelian_gula.value);
-
-//   if (PembelianGula > Stok_gula) {
-//     Pembelian_gula.value = Stok_gula;
-//   }
-// });
-
-// // Susu
-// const Stok_susu = document.getElementById("stock_susu").value;
-// const Pembelian_susu = document.getElementById("jumlah_susu");
-// // Mengatur atribut "max" pada input pembelian sesuai dengan nilai stok
-// Pembelian_susu.setAttribute("max", Stok_susu);
-// // Menambahkan event listener untuk memastikan nilai pembelian tidak melebihi stok saat input berubah
-// Pembelian_susu.addEventListener("input", function () {
-//   const PembelianSusu = parseInt(Pembelian_susu.value);
-
-//   if (PembelianSusu > Stok_susu) {
-//     Pembelian_susu.value = Stok_susu;
-//   }
-// });
-
-// // telur
-// const Stok_telur = document.getElementById("stock_telur").value;
-// const Pembelian_telur = document.getElementById("jumlah_telur");
-// // Mengatur atribut "max" pada input pembelian sesuai dengan nilai stok
-// Pembelian_telur.setAttribute("max", Stok_telur);
-// // Menambahkan event listener untuk memastikan nilai pembelian tidak melebihi stok saat input berubah
-// Pembelian_telur.addEventListener("input", function () {
-//   const PembelianTelur = parseInt(Pembelian_telur.value);
-
-//   if (PembelianTelur > Stok_telur) {
-//     Pembelian_telur.value = Stok_telur;
-//   }
-// });
-
-// // Garam
-// const Stok_garam = document.getElementById("stock_garam").value;
-// const Pembelian_garam = document.getElementById("jumlah_garam");
-// // Mengatur atribut "max" pada input pembelian sesuai dengan nilai stok
-// Pembelian_garam.setAttribute("max", Stok_garam);
-// // Menambahkan event listener untuk memastikan nilai pembelian tidak melebihi stok saat input berubah
-// Pembelian_garam.addEventListener("input", function () {
-//   const PembelianGaram = parseInt(Pembelian_garam.value);
-
-//   if (PembelianGaram > Stok_garam) {
-//     Pembelian_garam.value = Stok_garam;
-//   }
-// });
 
 // form Validation dan kirim data
 const checkoutButton = document.querySelector(".checkout_button");
@@ -623,7 +485,7 @@ checkoutButton.addEventListener("click", async function (e) {
   e.preventDefault();
 
   // Memanggil fungsi total() untuk menghitung total harga dan memperbarui item_ids
-  total();
+  updateTotal();
   const totalHarga = parseFloat(document.getElementById("total_harga").value);
 
   // Minta token pembayaran dari Midtrans

@@ -66,36 +66,51 @@ if ($conn->connect_error) {
 }
 
 // Fungsi untuk membuat user baru
-function create_user($full_name, $phone_number, $email, $password) {
-    global $conn;
-    $password_hash = password_hash($password, PASSWORD_DEFAULT); 
-    $stmt = $conn->prepare("INSERT INTO users (full_name, phone_number, email, password) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("ssss", $full_name, $phone_number, $email, $password_hash); 
-    $stmt->execute();
-    $stmt->close();
+function create_user($full_name, $phone_number, $email, $address, $password) {
+  global $conn;
+  $password_hash = password_hash($password, PASSWORD_DEFAULT); 
+  $stmt = $conn->prepare("INSERT INTO users (full_name, phone_number, email, address, password) VALUES (?, ?, ?, ?, ?)");
+  $stmt->bind_param("sssss", $full_name, $phone_number, $email, $address, $password_hash); 
+  $stmt->execute();
+  $stmt->close();
 }
 
-// Fungsi untuk mengautentikasi user
+// Fungsi untuk mengautentikasi user atau admin
 function authenticate_user($email, $password) {
-    global $conn;
-    $stmt = $conn->prepare("SELECT * FROM users WHERE email=?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows == 1) {
-        $user = $result->fetch_assoc();
-        if (password_verify($password, $user['password'])) {
-            return $user;
-        }
-    }
-    return null;
-}
+  global $conn;
 
+  // Cek di tabel users
+  $stmt = $conn->prepare("SELECT * FROM users WHERE email=?");
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  if ($result->num_rows == 1) {
+      $user = $result->fetch_assoc();
+      if (password_verify($password, $user['password'])) {
+          return array_merge($user, ['role' => 'user']);
+      }
+  }
+
+  // Cek di tabel admin
+  $stmt = $conn->prepare("SELECT * FROM admin WHERE email=?");
+  $stmt->bind_param("s", $email);
+  $stmt->execute();
+  $result = $stmt->get_result();
+  if ($result->num_rows == 1) {
+      $admin = $result->fetch_assoc();
+      if ($password === $admin['password']) {
+          return array_merge($admin, ['role' => 'admin']);
+      }
+  }
+
+  return null;
+}
 // Proses sign up
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
   $full_name = $_POST['full_name'];
   $phone_number = $_POST['phone_number'];
   $email = $_POST['email'];
+  $address = $_POST['address'];
   $password = $_POST['password'];
 
   // Periksa apakah email sudah terdaftar
@@ -107,16 +122,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['signup'])) {
       echo '<script type="text/JavaScript">';  
       echo 'alert("Email Sudah Terdaftar, Silakan Gunakan Email Lain.")';  
       echo '</script>';
-      echo "<meta http-equiv='refresh' content='0;url=login.php'>";  
+      echo "<meta http-equiv='refresh' content='0;url=index.php'>";  
       exit();
   }
 
   // Jika email belum terdaftar, buat user baru
-  create_user($full_name, $phone_number, $email, $password);
+  create_user($full_name, $phone_number, $email, $address, $password);
   echo '<script type ="text/JavaScript">';  
   echo 'alert("Akun Telah Berhasil dibuat")';  
   echo '</script>';
-  echo "<meta http-equiv='refresh' content='0;url=login.php'>";  
+  echo "<meta http-equiv='refresh' content='0;url=index.php'>";   
 }
 
 
@@ -133,7 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login'])) {
           $_SESSION["role"] = $user['role'];  // Menyimpan role user ke dalam sesi
 
           if ($user['role'] == 'admin') {
-            header("Location: admin.php");
+            header("Location: ../admin/admin.php");
           } else {
             header("Location: ../index.php");
           }
@@ -170,7 +185,7 @@ $conn->close();
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css"
     />
-    <link rel="stylesheet" href="login.css" />
+    <link rel="stylesheet" href="logins.css" />
   </head>
   <body>
     <div class="section">
@@ -227,7 +242,7 @@ $conn->close();
                     <div class="center-wrap">
                       <div class="section text-center">
                         <h4 class="mb-3 pb-3">Sign Up</h4>
-                        <form method="post" action="login.php">
+                        <form method="post" action="index.php">
                           <div class="form-group">
                             <input
                               type="text"
@@ -257,6 +272,16 @@ $conn->close();
                               required
                             />
                             <i class="input-icon uil uil-at"></i>
+                          </div>
+                          <div class="form-group mt-2">
+                            <input
+                              type="text"
+                              name="address"
+                              class="form-style"
+                              placeholder="Address"
+                              required
+                            />
+                            <i class="input-icon uil uil-location-point"></i>
                           </div>
                           <div class="form-group mt-2">
                             <input

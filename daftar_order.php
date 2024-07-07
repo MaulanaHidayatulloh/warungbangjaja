@@ -2,7 +2,7 @@
 session_start();
 
 // Periksa apakah user sudah login
-if (!isset($_SESSION['login'])) {
+if (!isset($_SESSION["login"]) || $_SESSION["role"] != 'user') {
     header("Location: Form-Login/");
     exit();
 }
@@ -20,13 +20,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Query untuk mengambil data order user
+// Query untuk mengambil data order user, diurutkan berdasarkan order_date
 $sql = "SELECT orders.*, products.name, products.price, users.full_name 
         FROM orders 
         INNER JOIN products ON orders.product_id = products.id 
         INNER JOIN users ON orders.user_id = users.id 
         WHERE user_id = ? 
-        ORDER BY user_id, orders.id";
+        ORDER BY orders.order_date DESC";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $_SESSION['user_id']);
 $stmt->execute();
@@ -40,7 +40,7 @@ $result = $stmt->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar Order</title>
-    <link rel="stylesheet" href="order.css">
+    <link rel="stylesheet" href="daftar_order.css">
 </head>
 <body>
 <!-- Daftar Order User Start -->
@@ -49,14 +49,13 @@ $result = $stmt->get_result();
 
     <?php
     if ($result->num_rows > 0) {
-        $current_user_id = null;
-        $current_order_id = null;
+        $current_order_date = null;
         $total_harga = 0;
 
         while ($order = $result->fetch_assoc()) {
-            // Jika ada perubahan user_id, tampilkan total harga untuk user sebelumnya
-            if ($current_user_id !== $order['user_id']) {
-                if ($current_user_id !== null) {
+            // Jika ada perubahan order_date, tampilkan total harga untuk order_date sebelumnya
+            if ($current_order_date !== $order['order_date']) {
+                if ($current_order_date !== null) {
                     echo '</tbody>';
                     echo '<tfoot>';
                     echo '<tr>';
@@ -68,35 +67,13 @@ $result = $stmt->get_result();
                     echo '</div>';
                 }
 
-                // Reset total harga dan buka tabel baru untuk user baru
-                $current_user_id = $order['user_id'];
-                $current_order_id = null;
-                $total_harga = 0;
-
-                echo '<div class="user-section">';
-                echo '<h3>User ID: ' . $current_user_id . ' - ' . $order['full_name'] . '</h3>';
-            }
-
-            // Jika ada perubahan order_id, buka tabel baru
-            if ($current_order_id !== $order['id']) {
-                if ($current_order_id !== null) {
-                    echo '</tbody>';
-                    echo '<tfoot>';
-                    echo '<tr>';
-                    echo '<td colspan="4" class="text-right">Total Harga</td>';
-                    echo '<td>Rp ' . $total_harga . '</td>';
-                    echo '</tr>';
-                    echo '</tfoot>';
-                    echo '</table>';
-                    echo '</div>';
-                }
-
-                // Reset total harga dan buka tabel baru untuk order baru
-                $current_order_id = $order['id'];
+                // Reset total harga dan buka tabel baru untuk order_date baru
+                $current_order_date = $order['order_date'];
                 $total_harga = 0;
 
                 echo '<div class="order-section">';
-                echo '<h4>Order ID: ' . $current_order_id . '</h4>';
+                echo '<h3>Tanggal Order: ' . date('Y-m-d', strtotime($current_order_date)) . '</h3>';
+                echo '<h4>Waktu Order: ' . date('H:i:s', strtotime($current_order_date)) . '</h4>';
                 echo '<table class="order-list">';
                 echo '<thead>';
                 echo '<tr>';
@@ -116,14 +93,14 @@ $result = $stmt->get_result();
             echo '<td>' . $order['quantity'] . '</td>';
             echo '<td>Rp ' . $order['price'] . '</td>';
             echo '<td>Rp ' . ($order['quantity'] * $order['price']) . '</td>';
-            echo '<td>' . $order['order_date'] . '</td>';
+            echo '<td>' . date('Y-m-d H:i:s', strtotime($order['order_date'])) . '</td>';
             echo '</tr>';
 
             // Akumulasi total harga
             $total_harga += $order['quantity'] * $order['price'];
         }
 
-        // Tampilkan total harga untuk order terakhir dan user terakhir
+        // Tampilkan total harga untuk order_date terakhir
         echo '</tbody>';
         echo '<tfoot>';
         echo '<tr>';
@@ -132,7 +109,6 @@ $result = $stmt->get_result();
         echo '</tr>';
         echo '</tfoot>';
         echo '</table>';
-        echo '</div>';
         echo '</div>';
 
     } else {
@@ -149,4 +125,3 @@ $conn->close();
 
 </body>
 </html>
-
