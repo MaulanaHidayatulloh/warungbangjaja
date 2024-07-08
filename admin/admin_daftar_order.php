@@ -60,13 +60,13 @@ krsort($orders);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daftar Order Admin</title>
+    <title>Daftar Pesanan User (Admin)</title>
     <link rel="stylesheet" href="admin_daftar_order.css">
 </head>
 <body>
 <!-- Daftar Order Admin Start -->
 <div class="daftar-order-admin">
-    <h2>Daftar Order User</h2>
+    <h2>Daftar Pesanan User</h2>
     
     <?php
     if (!empty($orders)) {

@@ -45,7 +45,7 @@ $result = $stmt->get_result();
 <body>
 <!-- Daftar Order User Start -->
 <div class="daftar-order-user">
-    <h2>Daftar Order</h2>
+    <h2>Daftar Pesanan Anda</h2>
 
     <?php
     if ($result->num_rows > 0) {

@@ -180,7 +180,7 @@ $result = $conn->query($sql);
       <main class="content">
         <h1>Mari Belanja di <span>WarungBangJaJa</span></h1>
         <p>WarungBangJaJa lengkap menjual segala kebutuhan pokok</p>
-        <a href="daftar_order.php" class="cta">Belanja Sekarang</a>
+        <a href="daftar_order.php" class="cta">Lihat Pesanan Anda Disini!</a>
       </main>
     </section>
     <!-- Hero Section end -->
