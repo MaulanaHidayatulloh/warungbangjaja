@@ -423,6 +423,7 @@ $result = $conn->query($sql);
         <a href="#home">Home</a>
         <a href="#about">Tentang Kami</a>
         <a href="#menu">Menu</a>
+        <a href="#product">Penawaran Spesial</a>
         <a href="#contact">Kontak Kami</a>
       </div>
 
