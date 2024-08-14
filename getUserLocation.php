@@ -10,7 +10,7 @@ function getUserIpAddress() {
 function getUserLocation($ipAddress) {
     // Mengambil alamat IP pengguna dari parameter
     // Kemudian menggunakan alamat IP tersebut untuk mendapatkan informasi lokasi pengguna dari layanan geolocation
-    // Misalnya, Anda dapat menggunakan layanan seperti ip-api.com untuk mendapatkan informasi lokasi berdasarkan alamat IP
+    // Menggunakan layanan seperti ip-api.com untuk mendapatkan informasi lokasi berdasarkan alamat IP
     $response = file_get_contents("http://ip-api.com/json/{$ipAddress}");
     $data = json_decode($response, true);
     

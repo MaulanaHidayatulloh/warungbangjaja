@@ -5,13 +5,12 @@ body {
   padding: 2rem;
 }
 
-.daftar-order-admin {
-  width: 80%;
-  margin: 20px auto;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+.order-waktu {
+  border-bottom: 2px solid #e2e2e2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
 }
 
 h2 {
@@ -22,15 +21,12 @@ h2 {
 }
 
 h3 {
-  border-bottom: 2px solid #e2e2e2;
-  padding-bottom: 20px;
   color: #333;
   font-size: 2rem;
 }
 
 h4 {
   color: #555;
-  margin-top: 30px;
   font-size: 1.4rem;
 }
 
@@ -86,10 +82,6 @@ p {
 
 /* Gaya responsive */
 @media (max-width: 768px) {
-  .daftar-order-admin {
-    width: 95%;
-  }
-
   table,
   thead,
   tbody,

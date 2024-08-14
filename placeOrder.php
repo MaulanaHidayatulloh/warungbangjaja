@@ -6,14 +6,14 @@ require_once dirname(__FILE__) . '/pembayaran/midtrans-php-master/Midtrans.php';
 // Fungsi untuk mengambil total harga dari POST request
 function getTotalHarga() {
     $data = json_decode(file_get_contents('php://input'), true);
-    return isset($data['total_harga']) ? $data['total_harga'] : 0;
+    return isset($data['total_harga']) ? floatval($data['total_harga']) : 0;
 }
 
+// Ambil total harga
 $total_harga = getTotalHarga();
 
 // Fungsi untuk mengambil data pelanggan dari database berdasarkan user ID
 function getCustomerDataFromDatabase($user_id) {
-    // Koneksi ke database
     $host = "localhost";
     $user = "root";
     $password = ""; // Biarkan kosong jika tidak ada password
@@ -21,22 +21,20 @@ function getCustomerDataFromDatabase($user_id) {
 
     $conn = new mysqli($host, $user, $password, $database);
 
-    // Periksa koneksi
+    // Cek koneksi
     if ($conn->connect_error) {
         die("Connection failed: " . $conn->connect_error);
     }
 
-    // Query untuk mengambil informasi pelanggan
+    // Query untuk mengambil data pelanggan
     $sql = "SELECT * FROM users WHERE id = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $user_id);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Ambil data pelanggan dari hasil query
     $customer_data = $result->fetch_assoc();
 
-    // Tutup koneksi
     $stmt->close();
     $conn->close();
 
@@ -62,10 +60,19 @@ $customer_details = array(
     'phone' => $customer_data['phone_number'], // Jika ada kolom phone dalam tabel users
 );
 
-// Menggunakan total harga dari JavaScript
+// Ambil `midtrans_order_id` dari request POST
+$data = json_decode(file_get_contents('php://input'), true);
+$midtrans_order_id = isset($data['midtrans_order_id']) ? $data['midtrans_order_id'] : null; // Gunakan `midtrans_order_id` dari add_order.php
+
+// Verifikasi bahwa `midtrans_order_id` ada dan tidak kosong
+if (is_null($midtrans_order_id) || empty($midtrans_order_id)) {
+    echo json_encode(['success' => false, 'message' => 'Order ID tidak ditemukan']);
+    exit();
+}
+
 $params = array(
     'transaction_details' => array(
-        'order_id' => rand(),
+        'order_id' => $midtrans_order_id,
         'gross_amount' => $total_harga, // Menggunakan total harga dari JavaScript
     ),
     'customer_details' => $customer_details,

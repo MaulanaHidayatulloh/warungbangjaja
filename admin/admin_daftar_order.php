@@ -72,17 +72,54 @@ krsort($orders);
     if (!empty($orders)) {
         // Looping berdasarkan tanggal order
         foreach ($orders as $order_date => $users) {
-            echo '<h3>Tanggal Order : ' . $order_date . '</h3>';
+            echo '<h3 style="text-align: center;">Tanggal Order : ' . $order_date . '</h3>';
             
             // Looping berdasarkan nama pengguna
             foreach ($users as $full_name => $orders_by_time) {
-                echo '<h4>Nama: ' . $full_name . '</h4>';
+                echo '<h3>Nama Pembeli : ' . $full_name . '</h3>';
                 
                 // Looping berdasarkan waktu order (terbaru ke terlama)
                 krsort($orders_by_time);
                 foreach ($orders_by_time as $order_time => $orders) {
+                    // Inisialisasi variabel untuk menyimpan ID order yang sudah ditampilkan
+                    $displayed_order_ids = [];
+
+                    foreach ($orders as $order) {
+                        // Cek apakah ID Order sudah ditampilkan
+                        if (!in_array($order['midtrans_order_id'], $displayed_order_ids)) {
+                            // Jika belum, tampilkan ID Order dan Status Pembayaran
+                            $payment_status = $order['payment_status'];
+                            $status_color = '';
+                            $status_text = '';
+                            switch ($payment_status) {
+                                case 'success':
+                                    $status_color = 'green';
+                                    $status_text = 'Berhasil Bayar';
+                                    break;
+                                case 'pending':
+                                    $status_color = 'orange';
+                                    $status_text = 'Menunggu Pembayaran';
+                                    break;
+                                case 'failure':
+                                    $status_color = 'red';
+                                    $status_text = 'Gagal Bayar';
+                                    break;
+                                default:
+                                    $status_color = 'gray';
+                                    $status_text = 'Status Tidak Diketahui';
+                                    break;
+                            }
+
+                            echo '<h4>ID Order: ' . $order['midtrans_order_id'] . '</h4>'; // Menampilkan ID Order
+                            echo '<h4>Status Pembayaran: <span style="color:' . $status_color . ';">' . $status_text . '</span></h4>';
+
+                            // Tambahkan ID Order ke array displayed_order_ids
+                            $displayed_order_ids[] = $order['midtrans_order_id'];
+                        }
+                    }
+
                     echo '<h5>Waktu Order : ' . $order_time . '</h5>';
-                    echo '<table>';
+                    echo '<table style="margin-bottom: 4rem;">';
                     echo '<thead>';
                     echo '<tr>';
                     echo '<th>ID Produk</th>'; // Menambah kolom ID Produk
@@ -91,8 +128,8 @@ krsort($orders);
                     echo '<th>Harga</th>';
                     echo '<th>Status</th>';
                     echo '<th>Aksi</th>';
-                    '</tr>';
-                    '</thead>';
+                    echo '</tr>';
+                    echo '</thead>';
                     echo '<tbody>';
 
                     // Variable to store total price for current table
@@ -132,9 +169,9 @@ krsort($orders);
                     echo '<td><strong>Rp ' . $total_price . '</strong></td>';
                     echo '<td colspan="2"></td>';
                     echo '</tr>';
-
                     echo '</tbody>';
                     echo '</table>';
+                    echo '<hr>';
                 }
             }
         }

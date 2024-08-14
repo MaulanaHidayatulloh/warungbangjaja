@@ -325,7 +325,6 @@ document.addEventListener("DOMContentLoaded", function () {
       );
 
       if (cartItem) {
-        // cartItem.remove(); // Menghapus elemen item dari DOM
         updateTotal(); // Memperbarui total harga setelah item dihapus
         cartItem.classList.toggle("active");
       }
@@ -392,59 +391,63 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (item_ids.length > 0) {
         try {
-          const response = await fetch("placeOrder.php", {
+          // Pertama, tambahkan order ke database
+          const addOrderResponse = await fetch("add_order.php", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
               items: item_ids,
-              total_harga: total_harga,
             }),
           });
 
-          const data = await response.json();
-          if (data.success) {
-            let snapToken = data.snapToken;
+          const addOrderData = await addOrderResponse.json();
+          if (addOrderData.success) {
+            let midtrans_order_id = addOrderData.midtrans_order_id; // Ambil midtrans_order_id dari add_order.php
 
-            fetch("add_order.php", {
+            // Kedua, ambil token Snap dari Midtrans
+            const placeOrderResponse = await fetch("placeOrder.php", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                items: item_ids,
+                midtrans_order_id: midtrans_order_id,
+                total_harga: total_harga,
               }),
-            })
-              .then((response) => response.json())
-              .then((data) => {
-                if (data.success) {
-                  window.snap.pay(snapToken, {
-                    onSuccess: function (result) {
-                      console.log("Payment successful!", result);
-                    },
-                    onPending: function (result) {
-                      console.log("Payment pending.", result);
-                    },
-                    onError: function (result) {
-                      console.log("Payment error.", result);
-                    },
-                    onClose: function () {
-                      console.log("Payment closed without success.");
-                    },
-                  });
-                } else {
-                  console.error(
-                    "Gagal menambahkan/updated order ke database:",
-                    data.message
-                  );
-                }
-              })
-              .catch((error) => {
-                console.error("Error:", error);
+            });
+
+            const placeOrderData = await placeOrderResponse.json();
+            if (placeOrderData.success) {
+              let snapToken = placeOrderData.snapToken;
+
+              // Proses pembayaran menggunakan snapToken
+              window.snap.pay(snapToken, {
+                onSuccess: function (result) {
+                  console.log("Payment successful!", result);
+                },
+                onPending: function (result) {
+                  console.log("Payment pending.", result);
+                },
+                onError: function (result) {
+                  console.log("Payment error.", result);
+                },
+                onClose: function () {
+                  console.log("Payment closed without success.");
+                },
               });
+            } else {
+              console.error(
+                "Gagal mendapatkan token pembayaran:",
+                placeOrderData.message
+              );
+            }
           } else {
-            console.error("Gagal mendapatkan token pembayaran:", data.message);
+            console.error(
+              "Gagal menambahkan order ke database:",
+              addOrderData.message
+            );
           }
         } catch (err) {
           console.error("Error:", err.message);
