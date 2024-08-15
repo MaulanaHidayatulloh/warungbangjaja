@@ -24,3 +24,11 @@ Welcome to **Warung BangJaja**, an e-commerce platform designed for small busine
 
    ```bash
    git clone https://github.com/MaulanaHidayatulloh/warungbangjaja.git
+
+## Author
+
+**Maulana Hidayatulloh Mujanah**
+- Student at Universitas Gunadarma
+- [Portfolio](https://maulanahidayatulloh.github.io/portfolio-MaulanaHidayatullohMujanah/)
+- [GitHub](https://github.com/MaulanaHidayatulloh)
+- [LinkedIn](https://www.linkedin.com/in/maulanahidayatulloh/)
