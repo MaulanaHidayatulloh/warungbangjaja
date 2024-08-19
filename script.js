@@ -101,26 +101,35 @@ document.addEventListener("DOMContentLoaded", function () {
   const buttonCancel = document.querySelectorAll("[id^=cancel-]");
   buttonCancel.forEach(function (cancel) {
     cancel.onclick = function (e) {
+      e.preventDefault();
+
       const productID = cancel.id.split("-")[1];
       const cartItem = document.querySelector("#cart-item-" + productID);
       const keranjang = document.querySelector(
         "#keranjang-belanja-" + productID
       );
-      const productNameElement = document
-        .getElementById("cart-item-" + productID)
-        .querySelector(".item-detail h3");
-      const productNameWords = productNameElement.innerText.split(" ");
-      const productName = productNameWords.join(" ");
-      const jumlahProduk = document.getElementById("jumlah_" + productName);
+      const jumlahProduk = document.getElementById("jumlah_" + productID);
 
-      cancel.classList.toggle("active");
-      cartItem.classList.toggle("active");
-      if (jumlahProduk) {
-        jumlahProduk.value = "0"; // Set nilai jumlah produk menjadi 0 jika elemen ditemukan
+      // Update the total price before toggling the cart item
+      if (cartItem) {
+        cartItem.classList.toggle("active");
       }
-      keranjang.style.display = "flex";
-      total();
-      e.preventDefault();
+
+      // Set nilai jumlah produk menjadi 0 jika elemen ditemukan
+      if (jumlahProduk) {
+        jumlahProduk.value = "0";
+      }
+
+      // Menampilkan kembali keranjang belanja jika ada
+      if (keranjang) {
+        keranjang.style.display = "flex";
+      }
+
+      // Toggle class active pada cancel
+      cancel.classList.toggle("active");
+
+      // Memperbarui total harga setelah item dihapus
+      updateTotal();
     };
   });
 });
@@ -350,7 +359,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (informasi) {
         informasi.classList.toggle("active"); // Tambahkan kelas active pada informasi
       }
-      updateTotal(); // Memastikan total harga terupdate setelah perubahan
+      updateTotal();
     };
   });
 
