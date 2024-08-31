@@ -7,7 +7,7 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != 'admin') {
     exit();
 }
 
-// Logout user
+// Logout admin
 if (isset($_GET['logout'])) {
     // Hapus semua data session
     session_unset();

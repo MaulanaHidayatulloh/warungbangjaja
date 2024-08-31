@@ -57,7 +57,7 @@ $result = $conn->query($sql);
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
 
     <!-- My Style -->
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles.css" />
 
     <!-- Midtrans -->
     <script type="text/javascript"
@@ -104,7 +104,7 @@ $result = $conn->query($sql);
 
     <?php
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $userId = $_SESSION['user_id']; // Anda bisa mendapatkan user_id dari session setelah login
+        $userId = $_SESSION['user_id'];
         $items = json_decode($_POST['items'], true);
 
         // Query untuk menyimpan order ke database
@@ -122,10 +122,6 @@ $result = $conn->query($sql);
         }
 
         $conn->close();
-
-        // Redirect ke halaman daftar order
-        // header("Location: daftar_order.php");
-        // exit();
     }
     ?>
 
@@ -167,11 +163,7 @@ $result = $conn->query($sql);
         </div>
     </form>
 </div>
-
-
-
-      
-      <!-- Shopping Cart End -->
+    <!-- Shopping Cart End -->
     </nav>
     <!-- Navbar End -->
 
@@ -225,7 +217,7 @@ $result = $conn->query($sql);
     >
       <h2><span>Menu</span> Kami</h2>
       <p>Berikut produk Yang Toko Kami Jual :</p>
-      <p>(Silakan Anda Melihat terlebih Dahulu Dan Dipilih Terlebih Dahulu)</p>
+      <p>(Silakan Anda Melihat terlebih Dahulu Dan Dipilih Terlebih Dahulu, Untuk Tata Cara Pembelian <a href="#" class="item-detail-button-1" style="color:aqua;"><strong>klik disini</strong></a>)</p>
 
       <?php
       // Koneksi ke database
@@ -283,7 +275,7 @@ $result = $conn->query($sql);
     >
       <h2><span>Penawaran</span> Spesial</h2>
       <p>Berikut Penawaran Spesial Untuk Anda Di Toko Kami :</p>
-      <p>(Silakan Anda Melihat terlebih Dahulu Dan Dipilih Terlebih Dahulu)</p>
+      <p>(Silakan Anda Melihat terlebih Dahulu Dan Dipilih Terlebih Dahulu, Untuk Tata Cara Pembelian <a href="#" class="item-detail-button-2" style="color:aqua;"><strong>klik disini</strong></a>)</p>
       
       <?php
       // Koneksi ke database
@@ -444,27 +436,26 @@ $result = $conn->query($sql);
       <div class="modal-container">
         <a href="#" class="close-icon"><i data-feather="x"></i></a>
         <div class="modal-content">
-          <img src="img/product/mild16.png" alt="mild16" />
-          <div class="product-content">
-            <h3>Mild 16</h3>
-            <p>
-              Rokok Mild, pilihan yang tepat untuk Anda yang mencari sensasi
-              merokok yang lebih ringan dan santai. Nikmati kelezatan rokok Mild
-              dengan rasa yang lembut dan tidak terlalu kuat.
-            </p>
-            <div class="product-star">
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-              <i class="bi bi-star-fill"></i>
-            </div>
-            <div class="product-price">
-              Harga : Rp 25.000/Bungkus <span>Rp 30.000/Bungkus</span>
-            </div>
-            <a href="#"
-              ><i data-feather="shopping-cart"></i> <span>Belanja</span></a
-            >
+          <div class="content-section">
+            <h3>Tata Cara Pembelian di Website WarungBangJaJa</h3>
+            <ol>
+              <li>Kalian bisa cari produk yang ingin dibeli di <strong>Menu Kami</strong> atau di <strong>Penawaran Spesial</strong></li>
+              <li>Setelah ketemu produk yang ingin dibeli, kalian bisa klik tombol belanja (untuk di <strong>Menu Kami</strong>) atau klik icon/logo keranjang belanja (di <strong>Penawaran Spesial</strong>)</li>
+              <li>Maka produk akan masuk ke Keranjang Belanja, lalu kalian bisa melihatnya dengan cara klik logo/icon keranjang belanja (di pojok kanan atas atau di samping logo/icon logout)</li>
+              <li>Kemudian kalian input jumlah produk yang ingin dibeli</li>
+              <li>Klik tombol Bayar Sekarang, dan selesaikan pembayaran</li>
+              <li>Setelah selesai melakukan pembayaran, kalian bisa melihat daftar pesanan di Menu <strong>Home</strong> (klik tombol Lihat Pesanan Anda Disini!)</li>
+              <li>Tunggu sampai toko membalas via Whatsapp/Email untuk detail pengiriman</li>
+            </ol>
+          </div>
+          <div class="content-section">
+            <h3>Tata Cara Retur atau Komplain di Website WarungBangJaJa</h3>
+            <ol>
+              <li>Kalian bisa ke menu <strong>Kontak Kami</strong></li>
+              <li>Isi form yang telah disediakan, masukkan pesan retur atau komplain di form pesan</li>
+              <li>Kemudian klik Kirim Pesan</li>
+              <li>Tunggu sampai toko membalas via Whatsapp/Email</li>
+            </ol>
           </div>
         </div>
       </div>

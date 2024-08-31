@@ -2,7 +2,7 @@
 session_start();
 
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != 'admin') {
-    header("location: ../../form-login/"); 
+    header("location: ../../form-login/");
     exit();
 }
 
@@ -20,7 +20,7 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != 'admin') {
     <h1>Database Produk</h1>
     <div class="container">
     <form method="GET">
-        <label for="search">Pencarian Produk:</label>
+        <label for="search">Pencarian Produk :</label>
         <input type="text" id="search" name="search" value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
         <button type="submit">Cari Produk</button>
     </form>
@@ -31,7 +31,9 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != 'admin') {
                 <th>ID</th>
                 <th>Nama Produk</th>
                 <th>Stok</th>
-                <th>Harga</th>
+                <th>Harga (Jual/Diskon)</th>
+                <th>Harga Beli</th>
+                <th>Harga Tanpa Diskon</th>
                 <th>Gambar</th>
                 <th>Spesial</th>
                 <th>Edit/Delete</th>
@@ -42,7 +44,7 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != 'admin') {
             <?php
             $host = "localhost";
             $user = "root";
-            $password = ""; // Biarkan kosong jika tidak ada password
+            $password = ""; 
             $database = "produk";
 
             $conn = new mysqli($host, $user, $password, $database);
@@ -71,6 +73,8 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != 'admin') {
                     echo "<td>" . $row["name"] . "</td>";
                     echo "<td>" . $row["stock"] . "</td>";
                     echo "<td>Rp " . $row["price"] . "</td>";
+                    echo "<td>Rp " . $row["purchase_price"] . "</td>";
+                    echo "<td>Rp " . $row["nodiscount"] . "</td>";
                     echo "<td>" . $row["image"] . "</td>";
                     echo "<td>" . $row["special"] . "</td>";
                     echo "<td>";
@@ -80,7 +84,7 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != 'admin') {
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='7'>Tidak ada data produk.</td></tr>";
+                echo "<tr><td colspan='9'>Tidak ada data produk.</td></tr>";
             }
             $conn->close();
             ?>

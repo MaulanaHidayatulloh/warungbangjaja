@@ -136,22 +136,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Klik Mata Modal Box
 // Modal Box 1
-// const itemDetailModal1 = document.querySelector("#item-detail-modal-1");
-// const itemDetailButton1 = document.querySelector(".item-detail-button-1");
+const itemDetailModal1 = document.querySelector("#item-detail-modal-1");
+const itemDetailButton1 = document.querySelector(".item-detail-button-1");
 
-// itemDetailButton1.onclick = (e) => {
-//   itemDetailModal1.style.display = "flex";
-//   e.preventDefault();
-// };
+itemDetailButton1.onclick = (e) => {
+  itemDetailModal1.style.display = "flex";
+  e.preventDefault();
+};
 
 // // Modal Box 2
-// const itemDetailModal2 = document.querySelector("#item-detail-modal-2");
-// const itemDetailButton2 = document.querySelector(".item-detail-button-2");
+const itemDetailModal2 = document.querySelector("#item-detail-modal-2");
+const itemDetailButton2 = document.querySelector(".item-detail-button-2");
 
-// itemDetailButton2.onclick = (e) => {
-//   itemDetailModal2.style.display = "flex";
-//   e.preventDefault();
-// };
+itemDetailButton2.onclick = (e) => {
+  itemDetailModal1.style.display = "flex";
+  e.preventDefault();
+};
 
 // // Modal 3
 // const itemDetailModal3 = document.querySelector("#item-detail-modal-3");
@@ -171,12 +171,12 @@ document.addEventListener("DOMContentLoaded", function () {
 //   e.preventDefault();
 // };
 
-// // Klik tombol close modal
-// // Modal Box 1
-// document.querySelector(".modal-1 .close-icon").onclick = (e) => {
-//   itemDetailModal1.style.display = "none";
-//   e.preventDefault();
-// };
+// Klik tombol close modal
+// Modal Box 1
+document.querySelector(".modal-1 .close-icon").onclick = (e) => {
+  itemDetailModal1.style.display = "none";
+  e.preventDefault();
+};
 
 // // Modal Box 2
 // document.querySelector(".modal-2 .close-icon").onclick = (e) => {
@@ -197,23 +197,11 @@ document.addEventListener("DOMContentLoaded", function () {
 // };
 
 // // Klik Diluar Tombol
-// window.onclick = (e) => {
-//   if (e.target === itemDetailModal1) {
-//     itemDetailModal1.style.display = "none";
-//   }
-
-//   if (e.target === itemDetailModal2) {
-//     itemDetailModal2.style.display = "none";
-//   }
-
-//   if (e.target === itemDetailModal3) {
-//     itemDetailModal3.style.display = "none";
-//   }
-
-//   if (e.target === itemDetailModal4) {
-//     itemDetailModal4.style.display = "none";
-//   }
-// };
+window.onclick = (e) => {
+  if (e.target === itemDetailModal1) {
+    itemDetailModal1.style.display = "none";
+  }
+};
 
 // Alert
 // klik tombol close alert

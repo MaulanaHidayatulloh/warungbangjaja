@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
 $user = "root";
-$password = ""; // Biarkan kosong jika tidak ada password
+$password = ""; 
 $database = "produk";
 
 $conn = new mysqli($host, $user, $password, $database);
@@ -23,6 +23,9 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
         $name = $row['name'];
         $stock = $row['stock'];
         $price = $row['price'];
+        $purchase_price = $row['purchase_price']; 
+        $nodiscount = $row['nodiscount']; 
+        $special = $row['special']; 
         $image = $row['image'];
     } else {
         echo "Produk tidak ditemukan.";
@@ -33,30 +36,33 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id = $_POST['id'];
     $name = $_POST['name'];
-    $stock = $_POST['stock'];
+    $additional_stock = $_POST['stock'];
     $price = $_POST['price'];
+    $purchase_price = $_POST['purchase_price']; 
+    $nodiscount = $_POST['nodiscount']; 
+    $special = $_POST['special']; 
     $image = $_POST['image'];
 
-    // Query untuk mengupdate data produk
-    $sql = "UPDATE products SET name='$name', stock='$stock', price='$price', image='$image' WHERE id='$id'";
+    // Query untuk mendapatkan stok saat ini
+    $sql = "SELECT stock FROM products WHERE id = '$id'";
+    $result = $conn->query($sql);
+    
+    if ($result->num_rows == 1) {
+        $row = $result->fetch_assoc();
+        $current_stock = $row['stock'];
+        $new_stock = $current_stock + $additional_stock; 
 
-    if ($conn->query($sql) === TRUE) {
-        // Setelah pembaruan data berhasil, kembalikan data produk untuk ditampilkan kembali di formulir
-        $sql = "SELECT * FROM products WHERE id = '$id'";
-        $result = $conn->query($sql);
+        // Query untuk mengupdate data produk termasuk harga beli, nodiscount, dan special
+        $sql = "UPDATE products SET name='$name', stock='$new_stock', price='$price', purchase_price='$purchase_price', nodiscount='$nodiscount', special='$special', image='$image' WHERE id='$id'";
 
-        if ($result->num_rows == 1) {
-            $row = $result->fetch_assoc();
-            $name = $row['name'];
-            $stock = $row['stock'];
-            $price = $row['price'];
-            $image = $row['image'];
+        if ($conn->query($sql) === TRUE) {
+            echo "<h1><span>Data produk berhasil diperbarui</span></h1>";
+            echo "<meta http-equiv='refresh' content='3;url=view_database.php'>";
+        } else {
+            echo "Error updating record: " . $conn->error;
         }
-        
-        echo "<h1><span>Data produk berhasil diperbarui</span></h1>";
-        echo "<meta http-equiv='refresh' content='3;url=view_database.php'>";
     } else {
-        echo "Error updating record: " . $conn->error;
+        echo "Produk tidak ditemukan.";
     }
 }
 
@@ -75,13 +81,19 @@ $conn->close();
     <div class="container">
     <form method="POST">
         <input type="hidden" name="id" value="<?php echo $id; ?>">
-        <label for="name">Nama Produk:</label><br>
+        <label for="name">Nama Produk :</label><br>
         <input type="text" id="name" name="name" value="<?php echo $name; ?>" required><br>
-        <label for="stock">Stok:</label><br>
-        <input type="number" id="stock" name="stock" value="<?php echo $stock; ?>" required><br>
-        <label for="price">Harga:</label><br>
+        <label for="stock">Tambahkan Stok :</label><br>
+        <input type="number" id="stock" name="stock" min="0" value="0" required><br>
+        <label for="price">Harga :</label><br>
         <input type="number" id="price" name="price" value="<?php echo $price; ?>" required><br>
-        <label for="image">Gambar:</label><br>
+        <label for="purchase_price">Harga Beli :</label><br>
+        <input type="number" id="purchase_price" name="purchase_price" value="<?php echo $purchase_price; ?>" required><br>
+        <label for="nodiscount">Harga Tanpa Diskon :</label><br>
+        <input type="number" id="nodiscount" name="nodiscount" value="<?php echo $nodiscount; ?>" required><br>
+        <label for="special">Spesial (0/1) :</label><br>
+        <input type="number" id="special" name="special" min="0" max="1" value="<?php echo $special; ?>" required><br>
+        <label for="image">Gambar :</label><br>
         <input type="text" id="image" name="image" value="<?php echo $image; ?>" required><br><br>
         <button type="submit">Update Produk</button>
     </form>
